@@ -62,6 +62,15 @@ module.exports = function(grunt) {
   // ==========================================================================
 
   function initGrowlStatus() {
+    ['warn', 'fatal'].forEach(function(level) {
+      grunt.util.hooker.hook(grunt.fail, level, function(opt) {
+        growl(opt.name, {
+          title: opt.message,
+          image: 'Console'
+        });
+      });
+    });
+    
     grunt.util.hooker.hook(grunt.log, 'write', function(msg){
       if( grunt.log.uncolor(msg).match(/Waiting.../) ) { flushMessages('ok'); }
     });
